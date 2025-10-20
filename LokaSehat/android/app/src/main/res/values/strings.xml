@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">LokaSehat</string>
+    <string name="title_activity_main">LokaSehat</string>
+    <string name="package_name">com.lokasehat.app</string>
+    <string name="custom_url_scheme">com.lokasehat.app</string>
+</resources>
