@@ -1,14 +1,20 @@
 import React from 'react';
+import { MdOutlineSecurity } from "react-icons/md";
+import { RiVirusFill } from "react-icons/ri";
+import { FaHeadSideMask } from "react-icons/fa";
 
 const DiseaseInfo = ({ selectedLocation }) => {
   // Jika tidak ada lokasi yang dipilih, tampilkan data default
   if (!selectedLocation) {
     return (
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 mb-6">
         {/* Tingkat Keamanan */}
         <div className="bg-white p-4 rounded-lg shadow">
-          <h3 className="text-lg font-semibold mb-2">Tingkat Keamanan Wilayah</h3>
-          <div className="flex items-center">
+          <div className='flex items-center w-full translate-x-[-5px] mb-2'>
+            <MdOutlineSecurity className='mr-2 text-3xl'/>
+            <h3 className="text-sm font-semibold ">Tingkat Keamanan Wilayah</h3>
+          </div>
+          <div className="flex items-center"> 
             <div className="w-4 h-4 bg-gray-300 rounded-full mr-2"></div>
             <span className="text-gray-700">Pilih lokasi untuk melihat info</span>
           </div>
@@ -16,19 +22,25 @@ const DiseaseInfo = ({ selectedLocation }) => {
         
         {/* Penyakit Menyebar */}
         <div className="bg-white p-4 rounded-lg shadow">
-          <h3 className="text-lg font-semibold mb-2">Penyakit yang Sedang Menyebar</h3>
-          <p className="text-gray-700">Pilih lokasi untuk melihat penyakit yang menyebar</p>
+          <div className='flex items-center w-full translate-x-[-5px] mb-2'>
+            <RiVirusFill className='mr-2 text-3xl'/>
+            <h3 className="text-sm font-semibold ">Penyakit Rawan</h3>
+          </div>
+          <p className="text-gray-700">Pilih lokasi untuk melihat penyakit rawan</p>
         </div>
         
         {/* Upaya Pencegahan */}
         <div className="bg-white p-4 rounded-lg shadow">
-          <h3 className="text-lg font-semibold mb-2">Upaya Pencegahan Umum</h3>
+          <div className='flex items-center w-full translate-x-[-5px] mb-2'>
+            <FaHeadSideMask className='mr-2 text-3xl'/>
+            <h3 className="text-sm font-semibold ">Upaya Pencegahan Umum</h3>
+          </div>
           <ul className="list-disc list-inside text-gray-700">
             <li>Gunakan masker</li>
-            <li>Cuci tangan secara teratur</li>
+            <li>Jaga Kebersihan</li>
             <li>Hindari keramaian</li>
             <li>Vaksinasi</li>
-            <li>Jaga daya tahan tubuh</li>
+            <li>Konsumsi Vitamin</li>
           </ul>
         </div>
       </div>
@@ -39,7 +51,7 @@ const DiseaseInfo = ({ selectedLocation }) => {
   const getSafetyColor = (level) => {
     switch(level) {
       case 'high': return 'red';
-      case 'medium': return 'orange';
+      case 'medium': return 'yellow';
       default: return 'green';
     }
   };
@@ -54,10 +66,13 @@ const DiseaseInfo = ({ selectedLocation }) => {
   };
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+    <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-6">
       {/* Tingkat Keamanan */}
       <div className="bg-white p-4 rounded-lg shadow">
-        <h3 className="text-lg font-semibold mb-2">Tingkat Keamanan {selectedLocation.name}</h3>
+        <div className='flex items-center w-full translate-x-[-5px] mb-2'>
+          <MdOutlineSecurity className='mr-2 text-3xl'/>
+          <h3 className="text-sm font-semibold">Tingkat Keamanan {selectedLocation.name}</h3>
+        </div>
         <div className="flex items-center mb-2">
           <div className={`w-4 h-4 bg-${getSafetyColor(selectedLocation.level)}-500 rounded-full mr-2`}></div>
           <span className="text-gray-700">{getSafetyText(selectedLocation.level)}</span>
@@ -69,7 +84,10 @@ const DiseaseInfo = ({ selectedLocation }) => {
       
       {/* Penyakit Menyebar */}
       <div className="bg-white p-4 rounded-lg shadow">
-        <h3 className="text-lg font-semibold mb-2">Penyakit di {selectedLocation.name}</h3>
+        <div className='flex items-center w-full translate-x-[-5px] mb-2'>
+          <RiVirusFill className='mr-2 text-3xl'/>
+          <h3 className="text-sm font-semibold ">Penyakit di {selectedLocation.name}</h3>
+        </div>
         {selectedLocation.diseases && selectedLocation.diseases.length > 0 ? (
           <ul className="list-disc list-inside text-gray-700">
             {selectedLocation.diseases.map((disease, index) => (
@@ -83,7 +101,10 @@ const DiseaseInfo = ({ selectedLocation }) => {
       
       {/* Upaya Pencegahan */}
       <div className="bg-white p-4 rounded-lg shadow">
-        <h3 className="text-lg font-semibold mb-2">Upaya Pencegahan</h3>
+        <div className='flex items-center w-full translate-x-[-5px] mb-2'>
+          <FaHeadSideMask className='mr-2 text-3xl'/>
+          <h3 className="text-sm font-semibold">Upaya Pencegahan</h3>
+        </div>
         {selectedLocation.precautions && selectedLocation.precautions.length > 0 ? (
           <ul className="list-disc list-inside text-gray-700">
             {selectedLocation.precautions.map((precaution, index) => (
