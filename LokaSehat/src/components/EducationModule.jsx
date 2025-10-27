@@ -1,4 +1,10 @@
 import React, { useState } from 'react';
+import { RiVirusFill } from "react-icons/ri";
+import { FaLungsVirus } from "react-icons/fa";
+import { PiThermometerColdBold } from "react-icons/pi";
+import { FaMosquito } from "react-icons/fa6";
+
+
 
 const EducationModule = () => {
   const [selectedTopic, setSelectedTopic] = useState('');
@@ -210,10 +216,13 @@ const EducationModule = () => {
   };
 
   // Daftar topik
-  const topics = [
-    'TBC', 'COVID-19', 'Influenza', 'Pneumonia', 'Malaria', 
-    'Cacar Air', 'DBD', 'Diare', 'Hepatitis', 'HIV/AIDS'
-  ];
+  const topics = {
+    'TBC':{icon : <FaLungsVirus/>}, 'COVID-19':{icon : <RiVirusFill/>}
+    ,'Influenza':{icon : <PiThermometerColdBold/>}, 'Pneumonia':{icon : <RiVirusFill/>},
+    'Malaria':{icon : <FaMosquito/>},'Cacar Air':{icon : <RiVirusFill/>},
+    'DBD':{icon : <FaMosquito/>}, 'Diare':{icon : <RiVirusFill/>},
+    'Hepatitis':{icon : <RiVirusFill/>}, 'HIV/AIDS':{icon : <RiVirusFill/>}
+  };
 
   // Fungsi untuk menangani pemilihan jawaban
   const handleAnswerSelect = (answer) => {
@@ -245,18 +254,23 @@ const EducationModule = () => {
       {/* Daftar Topik */}
       <div className="mb-6">
         <label className="block text-gray-700 mb-2">Pilih Topik Edukasi:</label>
-        <div className="grid grid-cols-2 md:grid-cols-5 gap-2">
-          {topics.map(topic => (
+        <div className="grid grid-cols-2 lg:grid-cols-3 gap-2">
+          {Object.entries(topics).map(([topic, { icon }]) => (
             <button 
               key={topic} 
               onClick={() => handleTopicChange(topic)}
-              className={`p-3 rounded border text-sm ${
+              className={`py-3 pl-2 rounded-xl m-2 text-sm flex items-center shadow-[1px_3px_5px_5px_rgba(142,197,255,0.5)] ${
                 selectedTopic === topic 
-                  ? 'bg-blue-500 text-white border-blue-500' 
-                  : 'bg-gray-100 border-gray-300 hover:bg-gray-200'
+                  ? 'bg-blue-500 text-white' 
+                  : 'bg-gray-200 hover:bg-gray-300'
               }`}
             >
-              {topic}
+              <span className="text-2xl mr-[10px] md:m-[10px]">{icon}</span>
+              <div className='flex  flex-col items-start'>
+                <span className='font-bold text-[1rem]'>{topic}</span>
+                <span className='font-light text-[0.75rem] text-start truncate w-full max-w-[140px] sm:max-w-none'>Pelajari penyakit ini</span>
+              </div>
+              <span className="text-lg font-bold mr-[10px] md:m-[10px] w-full justify-end hidden md:flex">&#8594;</span>
             </button>
           ))}
         </div>

@@ -2,6 +2,7 @@ import React, { useEffect, useRef } from 'react';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 import { diseaseData } from '../data/dummyData';
+import datakecamatan from './kecamatan.json'
 
 // Fix for default markers in Leaflet with Webpack
 delete L.Icon.Default.prototype._getIconUrl;
@@ -19,47 +20,109 @@ const MapContainer = ({ onSelectLocation, selectedLocation }) => {
   useEffect(() => {
     if (!mapInstance.current) {
       // Initialize map
-      mapInstance.current = L.map(mapRef.current).setView([-6.2088, 106.8456], 11);
+      mapInstance.current = L.map(mapRef.current).setView([-6.2088, 106.8456], 10.5);
       
       // Add tile layer
       L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
         attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
       }).addTo(mapInstance.current);
-      
-      // Color based on disease level
+
       const getColor = (level) => {
         return level === 'high' ? 'red' :
-               level === 'medium' ? 'orange' : 'green';
+               level === 'medium' ? 'yellow' : 'green';
       };
+      // ✅ Tambahkan polygon dari GeoJSON
+      L.geoJSON(datakecamatan, {
+        style: (feature) => {
+          // get name from GeoJSON
+          const name = feature.properties?.name;
+
+          // find matching diseaseData entry
+          const match = diseaseData.find(item => item.name.toUpperCase() === name.toUpperCase());
+
+          const level = match?.level || null;
+          return {
+            color: "black",
+            weight: 2,
+            fillColor: getColor(level),
+            fillOpacity: 0.3
+          };
+        },
+        onEachFeature: (feature, layer) => {
+          const name = feature.properties?.name;
+          const match = diseaseData.find(
+            (item) => item.name.toUpperCase() === name?.toUpperCase()
+          );
+
+          const locationData = {
+            name: match?.name || name || "Tidak diketahui",
+            diseases: match?.diseases || [],
+            level: match?.level || "low",
+            safety:
+              match?.level === "high"
+                ? "Tinggi"
+                : match?.level === "medium"
+                ? "Sedang"
+                : "Rendah",
+            precautions: match?.precautions || []
+          };
+
+          const diseases = match?.diseases?.join(", ") || "-";
+          const riskText =
+            locationData.level === "high"
+              ? "Tinggi"
+              : locationData.level === "medium"
+              ? "Sedang"
+              : "Rendah";
+
+          // Bind popup (optional visual info)
+          layer.bindPopup(`
+            <div class="p-2">
+              <strong class="text-lg">${locationData.name}</strong><br>
+              <span class="text-sm">Penyakit: ${diseases}</span><br>
+              <span class="text-sm">Tingkat Risiko: ${riskText}</span>
+            </div>
+          `);
+
+          // ✅ This now works
+          layer.on("click", () => {
+            if (onSelectLocation) {
+              onSelectLocation(match || locationData);
+            }
+          });
+        }
+      }).addTo(mapInstance.current);
       
+      // Color based on disease level
+            
       // Add markers for each location
-      diseaseData.forEach(location => {
-        const marker = L.circleMarker([location.lat, location.lng], {
-          color: getColor(location.level),
-          fillColor: getColor(location.level),
-          fillOpacity: 0.7,
-          radius: 25,
-          weight: 2
-        }).addTo(mapInstance.current);
+      // diseaseData.forEach(location => {
+      //   const marker = L.circleMarker([location.lat, location.lng], {
+      //     color: getColor(location.level),
+      //     fillColor: getColor(location.level),
+      //     fillOpacity: 0.7,
+      //     radius: 25,
+      //     weight: 2
+      //   }).addTo(mapInstance.current);
         
-        // Popup with information
-        marker.bindPopup(`
-          <div class="p-2">
-            <strong class="text-lg">${location.name}</strong><br>
-            <span class="text-sm">Penyakit: ${location.diseases.join(", ")}</span><br>
-            <span class="text-sm">Tingkat Risiko: ${location.level === 'high' ? 'Tinggi' : location.level === 'medium' ? 'Sedang' : 'Rendah'}</span>
-          </div>
-        `);
+      //   // Popup with information
+      //   marker.bindPopup(`
+      //     <div class="p-2">
+      //       <strong class="text-lg">${location.name}</strong><br>
+      //       <span class="text-sm">Penyakit: ${location.diseases.join(", ")}</span><br>
+      //       <span class="text-sm">Tingkat Risiko: ${location.level === 'high' ? 'Tinggi' : location.level === 'medium' ? 'Sedang' : 'Rendah'}</span>
+      //     </div>
+      //   `);
         
-        // Add click event to marker
-        marker.on('click', () => {
-          if (onSelectLocation) {
-            onSelectLocation(location);
-          }
-        });
+      //   // Add click event to marker
+      //   marker.on('click', () => {
+      //     if (onSelectLocation) {
+      //       onSelectLocation(location);
+      //     }
+      //   });
         
-        markersRef.current.push(marker);
-      });
+      //   markersRef.current.push(marker);
+      // });
       
       // Add legend
       const legend = L.control({position: 'bottomright'});
@@ -68,7 +131,7 @@ const MapContainer = ({ onSelectLocation, selectedLocation }) => {
         div.innerHTML = `
           <h4 class="font-bold mb-1">Keterangan Tingkat Risiko</h4>
           <div class="flex items-center mb-1"><div class="w-4 h-4 bg-red-500 rounded-full mr-2"></div> Tinggi</div>
-          <div class="flex items-center mb-1"><div class="w-4 h-4 bg-orange-500 rounded-full mr-2"></div> Sedang</div>
+          <div class="flex items-center mb-1"><div class="w-4 h-4 bg-yellow-500 rounded-full mr-2"></div> Sedang</div>
           <div class="flex items-center"><div class="w-4 h-4 bg-green-500 rounded-full mr-2"></div> Rendah</div>
         `;
         return div;
@@ -82,7 +145,7 @@ const MapContainer = ({ onSelectLocation, selectedLocation }) => {
         mapInstance.current = null;
       }
     };
-  }, [onSelectLocation]);
+  }, []);
 
   // Effect to highlight selected location on map
   useEffect(() => {
@@ -118,7 +181,7 @@ const MapContainer = ({ onSelectLocation, selectedLocation }) => {
     }
   }, [selectedLocation]);
 
-  return <div ref={mapRef} className="h-96 w-full rounded-lg mb-6" />;
+  return <div ref={mapRef} className="min-h-[440px] xl:min-h-[620px] h-full w-full" />;
 };
 
 export default MapContainer;

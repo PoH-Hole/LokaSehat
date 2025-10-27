@@ -1,4 +1,9 @@
 import React, { useState } from 'react';
+import { RiVirusFill } from "react-icons/ri";
+import { FaLungsVirus } from "react-icons/fa";
+import { PiThermometerColdBold } from "react-icons/pi";
+import { FaMosquito } from "react-icons/fa6";
+
 
 const SelfScreening = () => {
   const [selectedDisease, setSelectedDisease] = useState('');
@@ -6,48 +11,66 @@ const SelfScreening = () => {
   const [result, setResult] = useState(null);
 
   const diseaseQuestions = {
-    'TBC': [
-      'Batuk lebih dari 2 minggu',
-      'Demam ringan terutama sore hari',
-      'Berkeringat di malam hari',
-      'Penurunan berat badan',
-      'Nafsu makan menurun'
-    ],
-    'COVID-19': [
-      'Demam ≥38°C',
-      'Batuk kering',
-      'Sesak napas',
-      'Kehilangan indra penciuman/pengecap',
-      'Nyeri tenggorokan'
-    ],
-    'Influenza': [
-      'Demam mendadak',
-      'Nyeri otot dan sendi',
-      'Sakit kepala',
-      'Kelelahan',
-      'Hidung tersumbat'
-    ],
-    'Pneumonia': [
-      'Batuk berdahak',
-      'Sesak napas',
-      'Nyeri dada',
-      'Demam tinggi',
-      'Menggigil'
-    ],
-    'Malaria': [
-      'Demam periodik (naik-turun)',
-      'Menggigil',
-      'Sakit kepala berat',
-      'Mual dan muntah',
-      'Berkeringat banyak'
-    ],
-    'Cacar Air': [
-      'Bintil merah berisi cairan',
-      'Demam',
-      'Nyeri kepala',
-      'Nafsu makan menurun',
-      'Rasa gatal pada kulit'
-    ]
+    'TBC': {
+      icon: <FaLungsVirus />,
+      info: [
+        'Batuk lebih dari 2 minggu',
+        'Demam ringan terutama sore hari',
+        'Berkeringat di malam hari',
+        'Penurunan berat badan',
+        'Nafsu makan menurun'
+      ]
+    },
+    'COVID-19': {
+      icon: <RiVirusFill />,
+      info: [
+        'Demam ≥38°C',
+        'Batuk kering',
+        'Sesak napas',
+        'Kehilangan indra penciuman/pengecap',
+        'Nyeri tenggorokan'
+      ]
+    },
+    'Influenza': {
+      icon: <PiThermometerColdBold />,
+      info: [
+        'Demam mendadak',
+        'Nyeri otot dan sendi',
+        'Sakit kepala',
+        'Kelelahan',
+        'Hidung tersumbat'
+      ]
+    },
+    'Pneumonia': {
+      icon: <RiVirusFill />,
+      info: [
+        'Batuk berdahak',
+        'Sesak napas',
+        'Nyeri dada',
+        'Demam tinggi',
+        'Menggigil'
+      ]
+    },
+    'Malaria': {
+      icon: <FaMosquito />,
+      info: [
+        'Demam periodik (naik-turun)',
+        'Menggigil',
+        'Sakit kepala berat',
+        'Mual dan muntah',
+        'Berkeringat banyak'
+      ]
+    },
+    'Cacar Air': {
+      icon: <RiVirusFill />,
+      info: [
+        'Bintil merah berisi cairan',
+        'Demam',
+        'Nyeri kepala',
+        'Nafsu makan menurun',
+        'Rasa gatal pada kulit'
+      ]
+    }
   };
 
   const handleDiseaseSelect = (disease) => {
@@ -93,18 +116,23 @@ const SelfScreening = () => {
       {/* Pilih Penyakit */}
       <div className="mb-6">
         <label className="block text-gray-700 mb-2">Pilih Penyakit untuk Diskrining:</label>
-        <div className="grid grid-cols-2 md:grid-cols-3 gap-2">
-          {Object.keys(diseaseQuestions).map(disease => (
+        <div className="grid grid-cols-2 lg:grid-cols-3 gap-2">
+          {Object.entries(diseaseQuestions).map(([disease, { icon }]) => (
             <button
               key={disease}
               onClick={() => handleDiseaseSelect(disease)}
-              className={`p-3 rounded border ${
+              className={`p-3 rounded-xl border flex items-center m-2 shadow-[1px_3px_5px_5px_rgba(142,197,255,0.5)] ${
                 selectedDisease === disease 
-                  ? 'bg-blue-500 text-white border-blue-500' 
-                  : 'bg-gray-100 border-gray-300 hover:bg-gray-200'
+                  ? 'bg-blue-500 text-white border-none' 
+                  : 'bg-gray-200 hover:bg-gray-300 border-none'
               }`}
             >
-              {disease}
+              <span className="text-2xl mr-[10px] md:m-[10px]">{icon}</span>
+              <div className='flex  flex-col items-start'>
+                <span className='font-bold text-[1rem]'>{disease}</span>
+                <span className='font-light text-[0.75rem] text-start truncate w-full max-w-[120px] sm:max-w-none'>Cek diri anda mengenai penyakit ini</span>
+              </div>
+              <span className="text-lg font-bold mr-[10px] md:m-[10px] w-full justify-end hidden md:flex">&#8594;</span>
             </button>
           ))}
         </div>
@@ -112,10 +140,10 @@ const SelfScreening = () => {
 
       {/* Form Gejala */}
       {selectedDisease && (
-        <div className="mb-6">
-          <h4 className="font-semibold mb-3">Gejala {selectedDisease}:</h4>
-          <div className="space-y-3">
-            {diseaseQuestions[selectedDisease].map((symptom, index) => (
+        <div className="mb-6 flex flex-col items-center">
+          <h4 className="font-semibold mb-3">Gejala {selectedDisease}</h4>
+          <div className="space-y-3 w-full">
+            {diseaseQuestions[selectedDisease].info.map((symptom, index) => (
               <div key={index} className="flex items-center justify-between p-3 bg-gray-50 rounded">
                 <span>{symptom}</span>
                 <div className="flex space-x-4">

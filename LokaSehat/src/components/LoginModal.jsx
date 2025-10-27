@@ -35,7 +35,7 @@ const LoginModal = ({ isOpen, onClose, onLogin }) => {
     console.log('Login attempted with:', credentials);
     // Untuk demo, kita anggap login berhasil
     onLogin({
-      name: 'John Doe',
+      name: 'Zyunique',
       email: credentials.email
     });
   };
@@ -60,8 +60,8 @@ const LoginModal = ({ isOpen, onClose, onLogin }) => {
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-      <div className="bg-white rounded-lg p-6 w-full max-w-md relative">
+    <div className="fixed inset-0 bg-gradient-to-b from-sky-300 to-indigo-500 bg-opacity-50 flex items-center justify-center z-50 p-4">
+      <div className="bg-white rounded-lg p-6 w-full max-w-md relative shadow-2xl shadow-black">
         <button 
           onClick={onClose}
           className="absolute top-4 right-4 text-gray-500 hover:text-gray-700 text-2xl"
@@ -158,7 +158,7 @@ const LoginModal = ({ isOpen, onClose, onLogin }) => {
         ) : (
           // Form Login
           <>
-            <h2 className="text-2xl font-bold text-grey-800 mb-6 text-center">Login ke LokaSehat</h2>
+            <h2 className="text-2xl font-bold text-grey-800 mb-6 text-center">Login</h2>
             
             <form onSubmit={handleLoginSubmit}>
               <div className="mb-4">
@@ -171,7 +171,7 @@ const LoginModal = ({ isOpen, onClose, onLogin }) => {
                   name="email"
                   value={credentials.email}
                   onChange={handleLoginChange}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  className="w-full px-3 py-2 border border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                   required
                 />
               </div>
@@ -186,7 +186,7 @@ const LoginModal = ({ isOpen, onClose, onLogin }) => {
                   name="password"
                   value={credentials.password}
                   onChange={handleLoginChange}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  className="w-full px-3 py-2 border border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                   required
                 />
               </div>

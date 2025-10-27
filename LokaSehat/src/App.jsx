@@ -41,9 +41,9 @@ function App() {
       <Header user={user} onLogoutClick={handleLogout} />
       
       {/* Tab Navigation */}
-<div className="bg-white border-b">
-  <div className="max-w-6xl mx-auto overflow-x-auto">
-    <div className="flex space-x-1 min-w-max">
+<div className="bg-gradient-to-r from-white via-gray-300 to-gray-100 border-b">
+  <div className="mx-auto overflow-x-auto">
+    <div className="flex space-x-1 min-w-max justify-center">
       {[
         { id: 'peta', label: 'Peta Sebaran' },
         { id: 'skrining', label: 'Skrining Mandiri' },
@@ -53,7 +53,7 @@ function App() {
         <button
           key={tab.id}
           onClick={() => setActiveTab(tab.id)}
-          className={`px-3 sm:px-4 py-2 sm:py-3 font-medium text-xs sm:text-sm border-b-2 transition-colors ${
+          className={`px-3 sm:px-4 py-2 sm:py-3 font-medium text-xs sm:text-sm border-b-4 transition-colors ${
             activeTab === tab.id
               ? 'border-blue-500 text-blue-600'
               : 'border-transparent text-gray-500 hover:text-gray-700'
@@ -66,22 +66,28 @@ function App() {
   </div>
 </div>
 
-      <main className="flex-grow p-4">
-        <div className="max-w-6xl mx-auto">
+      <main className="flex-grow">
+        <div className="mx-auto">
           {/* Konten berdasarkan tab aktif */}
           {activeTab === 'peta' && (
-            <div className="bg-white rounded-lg shadow-md p-4 relative">
-              <h2 className="text-2xl font-bold mb-4">Pemetaan Geospasial Penyakit Menular</h2>
-              <h3 className="text-lg font-semibold text-gray-700 mb-4">Pilih Lokasi Tujuan</h3>
-              <div className="relative z-50 mb-4">
-                <SearchBox onSelectLocation={handleLocationSelect} />
+            <div className="bg-blue-400 shadow-md relative min-h-[85dvh] h-fit">
+              <div className='flex xl:flex-row flex-col'>
+                <div className='relative xl:w-[70%] w-full '>
+                  <div className="relative z-10">
+                    <MapContainer onSelectLocation={handleLocationSelect} selectedLocation={selectedLocation} />
+                  </div>
+                  <div className="absolute w-full top-3 px-[50px] z-50 mb-4">
+                    <SearchBox onSelectLocation={handleLocationSelect} />
+                  </div>
+                </div>
+                <div className='w-full p-[10px] flex items-center'>
+                  <div className='bg-blue-300 w-full p-[10px] rounded-2xl'>
+                    <DiseaseInfo selectedLocation={selectedLocation} />
+                    <WarningSection selectedLocation={selectedLocation} />
+                    <EmergencyContact selectedLocation={selectedLocation} />
+                  </div>
+                </div>
               </div>
-              <div className="relative z-10">
-                <MapContainer onSelectLocation={handleLocationSelect} selectedLocation={selectedLocation} />
-              </div>
-              <DiseaseInfo selectedLocation={selectedLocation} />
-              <WarningSection selectedLocation={selectedLocation} />
-              <EmergencyContact selectedLocation={selectedLocation} />
             </div>
           )}
 
